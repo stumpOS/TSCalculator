@@ -18,7 +18,7 @@ public:
 	Expression();
 	~Expression(void);
 	void NewOperand(Symbol<double>* symbol);
-	enum State{StartState, RightOfOperator, BuildingOperand, BuildingOperandAfterDecimal};
+	enum State{StartState, RightOfOperator, BuildingOperand, BuildingOperandAfterDecimal, ErrorState};
 
 	void Update(Symbol<double>* const& symbol);
 	std::string const& GetExpressionAsString(){return _expressionString;}

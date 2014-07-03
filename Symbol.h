@@ -84,7 +84,7 @@ public:
 	void AddSymbol(Symbol<T>* sym){_symbols.push_back(sym);}
 	void RemoveSymbol()
 	{
-		if(_symbols.empty())
+		if(!_symbols.empty())
 			_symbols.pop_back();
 	}
 private:

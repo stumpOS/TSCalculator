@@ -26,7 +26,9 @@ void Expression::BackExpression()
 		case RightOfOperator:
 			_expression.pop_back();
 			break;
-
+		case ErrorState:
+			ClearExpression();
+			break;
 		default:
 			break;
 			
@@ -36,8 +38,14 @@ void Expression::BackExpression()
 		_expressionString.pop_back();
 		}
 		if(!_pastStates.empty())
-			_pastStates.pop();
-		_state = _pastStates.top();
+		{
+			_state = _pastStates.top();
+			_pastStates.pop();	
+		}
+		else
+		{
+			_state = StartState;
+		}
 	}
 }
 void Expression::ClearExpression()
@@ -60,6 +68,7 @@ void Expression::ClearExpression()
 		_expression.clear();
 	}
 	_state = StartState;
+	_currentOperand = NULL;
 }
 void Expression::Evaluate()
 {
@@ -81,10 +90,7 @@ void Expression::Evaluate()
 	catch(std::logic_error const& ex)
 	{
 		_expressionString = ex.what();
-	}
-	catch(std::overflow_error const& ex)
-	{
-		_expressionString = "overflow";
+		_state = ErrorState;
 	}
 	functiontree.Clear();
 }
@@ -147,7 +153,12 @@ void Expression::Update(Symbol<double>* const& symbol)
 			_expressionString.pop_back();
 		}
 		break;
-
+	case ErrorState:
+		ClearExpression();
+		addToExpression = false;
+		isValid = false;
+		Update(symbol);
+		break;
 	default:
 		break;
 	}
